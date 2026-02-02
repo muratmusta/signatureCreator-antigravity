@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 
 interface EditorLayoutProps {
     sidebarContent: React.ReactNode;
@@ -18,45 +18,55 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
     onTabChange
 }) => {
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-background text-foreground font-sans">
-            {/* Desktop Sidebar - Fixed Width */}
+        <div className="flex h-screen w-full overflow-hidden bg-white text-gray-900 font-sans selection:bg-lime selection:text-black">
+
+            {/* Sidebar (Form Panel) */}
             <aside className={`
-        w-full md:w-[360px] lg:w-[400px] shrink-0 border-r border-border bg-card flex flex-col z-20 h-full absolute md:relative transition-transform duration-300 shadow-xl md:shadow-none
-        ${activeTab === 'edit' ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
-                {sidebarContent}
+                w-full md:w-[400px] shrink-0 border-r border-gray-100 bg-white flex flex-col z-20 h-full 
+                absolute md:relative transition-transform duration-300 ease-in-out
+                ${activeTab === 'edit' ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                shadow-2xl md:shadow-none
+            `}>
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                    {sidebarContent}
+                </div>
             </aside>
 
-            {/* Main Content Area */}
+            {/* Main Content (Preview Canvas) */}
             <div className={`
-        flex-1 flex flex-col min-w-0 bg-[#F8FAFC] relative
-        ${activeTab === 'preview' ? 'block' : 'hidden md:flex'}
-      `}>
+                flex-1 flex flex-col min-w-0 bg-gray-50/50 relative
+                ${activeTab === 'preview' ? 'flex' : 'hidden md:flex'}
+            `}>
                 {/* Header */}
-                <header className="h-14 px-6 border-b border-border bg-background/80 backdrop-blur-sm flex items-center justify-between z-10 sticky top-0">
+                <header className="h-20 border-b border-gray-100 bg-white flex items-center z-30 sticky top-0 px-2 shrink-0">
                     {headerContent}
                 </header>
 
-                {/* Canvas Wrapper - Dot Pattern Background */}
-                <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-8 bg-dot-pattern">
-                    <div className="absolute inset-0 z-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+                {/* Canvas Area */}
+                <main className="flex-1 relative overflow-hidden flex flex-col items-center justify-center p-4">
                     {mainContent}
                 </main>
             </div>
 
-            {/* Ultra-Mobile Tab Bar */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex gap-2 h-16 z-50">
+            {/* Mobile Navigation Tab Bar */}
+            <div className="md:hidden fixed bottom-6 left-6 right-6 bg-black rounded-xl p-1.5 flex gap-1 h-14 z-50 shadow-2xl">
                 <button
                     onClick={() => onTabChange('edit')}
-                    className={`flex-1 rounded-lg flex flex-col items-center justify-center gap-1 ${activeTab === 'edit' ? 'text-primary bg-primary/10 font-bold' : 'text-muted-foreground'}`}
+                    className={`
+                        flex-1 rounded-lg flex items-center justify-center gap-2 transition-all
+                        ${activeTab === 'edit' ? 'bg-white text-black shadow-sm' : 'text-gray-400'}
+                    `}
                 >
-                    <span className="text-xs">Düzenle</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest">DÜZENLE</span>
                 </button>
                 <button
                     onClick={() => onTabChange('preview')}
-                    className={`flex-1 rounded-lg flex flex-col items-center justify-center gap-1 ${activeTab === 'preview' ? 'text-primary bg-primary/10 font-bold' : 'text-muted-foreground'}`}
+                    className={`
+                        flex-1 rounded-lg flex items-center justify-center gap-2 transition-all
+                        ${activeTab === 'preview' ? 'bg-white text-black shadow-sm' : 'text-gray-400'}
+                    `}
                 >
-                    <span className="text-xs">Önizle</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest">ÖNİZLE</span>
                 </button>
             </div>
         </div>

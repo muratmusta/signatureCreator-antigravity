@@ -58,9 +58,9 @@ export const Template3: React.FC<TemplateProps> = ({ data, logoSrc }) => {
           <table cellPadding="0" cellSpacing="0" border={0}>
             <tbody>
               <tr>
-                {data.socialLinks.linkedin && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.linkedin} style={{ color: data.primaryColor, fontSize: '11px', textDecoration: 'none' }}>LinkedIn</a></td>}
-                {data.socialLinks.twitter && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.twitter} style={{ color: data.primaryColor, fontSize: '11px', textDecoration: 'none' }}>Twitter</a></td>}
-                {data.socialLinks.instagram && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.instagram} style={{ color: data.primaryColor, fontSize: '11px', textDecoration: 'none' }}>Instagram</a></td>}
+                {data.socialLinks.linkedin && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.linkedin}><img src="https://img.icons8.com/color/48/linkedin.png" width="18" height="18" alt="LI" /></a></td>}
+                {data.socialLinks.twitter && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.twitter}><img src="https://img.icons8.com/color/48/twitter.png" width="18" height="18" alt="TW" /></a></td>}
+                {data.socialLinks.instagram && <td style={{ paddingRight: '8px' }}><a href={data.socialLinks.instagram}><img src="https://img.icons8.com/color/48/instagram-new.png" width="18" height="18" alt="IG" /></a></td>}
               </tr>
             </tbody>
           </table>

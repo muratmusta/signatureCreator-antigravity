@@ -11,6 +11,7 @@ const basePersona: SignatureData = {
     logoBase64: '',
     useAutoLogo: true,
     primaryColor: '#000000',
+    layout: ['avatar', 'info', 'contact', 'social'],
     socialLinks: {
         linkedin: '',
         instagram: '',
@@ -88,9 +89,19 @@ export const TEMPLATE_PERSONA_MAP: Record<number, SignatureData> = {
     3: PERSONAS.minimal,
     4: PERSONAS.startup,
     5: PERSONAS.creative,
-    6: PERSONAS.corporate, // reuse
-    7: PERSONAS.tech,      // reuse
-    8: PERSONAS.creative,  // reuse
-    9: PERSONAS.startup,   // reuse
-    10: PERSONAS.minimal,  // reuse
+    6: PERSONAS.corporate,
+    7: PERSONAS.tech,
+    8: PERSONAS.creative,
+    9: PERSONAS.startup,
+    10: PERSONAS.minimal,
+    11: PERSONAS.tech,
+    12: PERSONAS.creative,
+    13: PERSONAS.corporate,
+    14: PERSONAS.minimal,
+    15: PERSONAS.creative,
+    16: PERSONAS.tech,
+    17: PERSONAS.corporate,
+    18: PERSONAS.corporate,
+    19: PERSONAS.corporate,
+    20: PERSONAS.minimal,
 };

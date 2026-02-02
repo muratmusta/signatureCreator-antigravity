@@ -23,12 +23,26 @@ export const renderSignatureToHtml = async (
         ? generateAutoLogo(data.fullName, data.primaryColor)
         : (data.logoBase64 || '');
 
+    const brandingHtml = (data.showBranding !== false) ? `
+        <br />
+        <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 10px;">
+            <tr>
+                <td style="font-family: Arial, sans-serif; font-size: 10px; color: #999;">
+                    Created with <a href="https://signatureos.com?utm_source=signature_footer" target="_blank" style="color: #999; text-decoration: none; font-weight: bold;">SignatureOS</a>
+                </td>
+            </tr>
+        </table>
+    ` : '';
+
     // Special handling for Template 1 (React Email Engine)
     if (templateId === 1) {
         try {
             const html = await render(<Template1Email data={data} logoSrc={logoSrc} />, {
                 pretty: true,
             });
+            if (brandingHtml) {
+                return html.replace('</body>', `${brandingHtml}</body>`);
+            }
             return html;
         } catch (e) {
             console.error("React Email Render Error", e);
@@ -55,5 +69,5 @@ export const renderSignatureToHtml = async (
         <Component data={data} logoSrc={logoSrc} />
     );
 
-    return `<!DOCTYPE html><html><body>${staticHtml}</body></html>`;
+    return `<!DOCTYPE html><html><body>${staticHtml}${brandingHtml}</body></html>`;
 };

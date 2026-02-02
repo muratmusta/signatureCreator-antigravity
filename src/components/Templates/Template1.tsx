@@ -1,5 +1,6 @@
 import React from 'react';
 import type { SignatureData, SectionType } from '../../types/signature';
+import { normalizeUrl } from '../../utils/url';
 
 interface TemplateProps {
   data: SignatureData;
@@ -8,58 +9,57 @@ interface TemplateProps {
 
 /**
  * Template 1: Dynamic Vertical Stack
- * Fully controllable via Drag & Drop Layout
+ * High-Contrast Premium Version
  */
 export const Template1: React.FC<TemplateProps> = ({ data, logoSrc }) => {
-  // Default layout fallback
   const layout = data.layout || ['avatar', 'info', 'contact', 'social'];
 
   const sections: Record<SectionType, React.ReactNode> = {
     avatar: (
       <tr>
-        <td align="center" style={{ paddingBottom: '16px' }}>
+        <td align="center" style={{ paddingBottom: '20px' }}>
           <img
             src={logoSrc}
             alt="Logo"
-            width="100"
-            height="100"
-            style={{ display: 'block', border: 0, borderRadius: '50%', objectFit: 'cover' }}
+            width="80"
+            height="80"
+            style={{ display: 'block', border: 0, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
           />
         </td>
       </tr>
     ),
     info: (
       <tr>
-        <td align="center" style={{ paddingBottom: '12px' }}>
-          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#1a1a1a', letterSpacing: '-0.5px' }}>{data.fullName}</div>
-          <div style={{ fontSize: '14px', color: data.primaryColor, fontWeight: 600, marginTop: '2px' }}>{data.title}</div>
-          {data.company && <div style={{ fontSize: '14px', color: '#666', marginTop: '2px' }}>{data.company}</div>}
+        <td align="center" style={{ paddingBottom: '16px' }}>
+          <div style={{ fontSize: '24px', fontWeight: '900', color: '#000000', letterSpacing: '-0.03em', lineHeight: '1.1' }}>{data.fullName}</div>
+          <div style={{ fontSize: '13px', color: data.primaryColor, fontWeight: '800', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{data.title}</div>
+          {data.company && <div style={{ fontSize: '14px', color: '#666', marginTop: '6px', fontWeight: '500' }}>{data.company}</div>}
         </td>
       </tr>
     ),
     contact: (
       <tr>
-        <td align="center" style={{ paddingBottom: '16px' }}>
+        <td align="center" style={{ paddingBottom: '20px' }}>
           <table cellPadding="0" cellSpacing="0" border={0} style={{ margin: '0 auto' }}>
             <tbody>
               {data.email && (
                 <tr>
-                  <td style={{ padding: '2px 0', fontSize: '13px', color: '#555' }}>
-                    <span style={{ opacity: 0.6 }}>✉️</span> <a href={`mailto:${data.email}`} style={{ color: '#555', textDecoration: 'none' }}>{data.email}</a>
+                  <td style={{ padding: '3px 0', fontSize: '13px', color: '#000000', fontWeight: '600' }}>
+                    <a href={`mailto:${data.email}`} style={{ color: '#000000', textDecoration: 'none' }}>{data.email}</a>
                   </td>
                 </tr>
               )}
               {data.phone && (
                 <tr>
-                  <td style={{ padding: '2px 0', fontSize: '13px', color: '#555' }}>
-                    <span style={{ opacity: 0.6 }}>📞</span> {data.phone}
+                  <td style={{ padding: '3px 0', fontSize: '13px', color: '#666666', fontWeight: '500' }}>
+                    {data.phone}
                   </td>
                 </tr>
               )}
               {data.website && (
                 <tr>
-                  <td style={{ padding: '2px 0', fontSize: '13px', color: '#555' }}>
-                    <span style={{ opacity: 0.6 }}>🌐</span> <a href={data.website.startsWith('http') ? data.website : `https://${data.website}`} style={{ color: '#555', textDecoration: 'none' }}>{data.website}</a>
+                  <td style={{ padding: '3px 0', fontSize: '13px', color: data.primaryColor, fontWeight: '700' }}>
+                    <a href={normalizeUrl(data.website)} style={{ color: data.primaryColor, textDecoration: 'none' }}>{data.website.replace(/^https?:\/\//, '')}</a>
                   </td>
                 </tr>
               )}
@@ -70,23 +70,29 @@ export const Template1: React.FC<TemplateProps> = ({ data, logoSrc }) => {
     ),
     social: (
       <tr>
-        <td align="center" style={{ paddingTop: '8px', borderTop: '1px solid #eee' }}>
+        <td align="center" style={{ paddingTop: '12px', borderTop: '1px solid #f0f0f0' }}>
           <table cellPadding="0" cellSpacing="0" border={0} style={{ margin: '0 auto' }}>
             <tbody>
               <tr>
                 {data.socialLinks.linkedin && (
-                  <td style={{ padding: '0 5px' }}>
-                    <a href={data.socialLinks.linkedin}><img src="https://img.icons8.com/color/48/linkedin.png" width="24" height="24" alt="LI" /></a>
+                  <td style={{ padding: '0 8px' }}>
+                    <a href={normalizeUrl(data.socialLinks.linkedin)} target="_blank" rel="noopener noreferrer">
+                      <img src="https://img.icons8.com/fluent/48/000000/linkedin.png" width="22" height="22" alt="LI" />
+                    </a>
                   </td>
                 )}
                 {data.socialLinks.twitter && (
-                  <td style={{ padding: '0 5px' }}>
-                    <a href={data.socialLinks.twitter}><img src="https://img.icons8.com/color/48/twitter.png" width="24" height="24" alt="TW" /></a>
+                  <td style={{ padding: '0 8px' }}>
+                    <a href={normalizeUrl(data.socialLinks.twitter)} target="_blank" rel="noopener noreferrer">
+                      <img src="https://img.icons8.com/fluent/48/000000/twitter.png" width="22" height="22" alt="TW" />
+                    </a>
                   </td>
                 )}
                 {data.socialLinks.instagram && (
-                  <td style={{ padding: '0 5px' }}>
-                    <a href={data.socialLinks.instagram}><img src="https://img.icons8.com/color/48/instagram-new.png" width="24" height="24" alt="IG" /></a>
+                  <td style={{ padding: '0 8px' }}>
+                    <a href={normalizeUrl(data.socialLinks.instagram)} target="_blank" rel="noopener noreferrer">
+                      <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" width="22" height="22" alt="IG" />
+                    </a>
                   </td>
                 )}
               </tr>
@@ -95,11 +101,35 @@ export const Template1: React.FC<TemplateProps> = ({ data, logoSrc }) => {
         </td>
       </tr>
     ),
-    banner: null as any // Placeholder
+    banner: (
+      data.badges && data.badges.length > 0 ? (
+        <tr>
+          <td align="center" style={{ paddingTop: '16px' }}>
+            <table cellPadding="0" cellSpacing="0" border={0} style={{ margin: '0 auto' }}>
+              <tbody>
+                <tr>
+                  {data.badges.map((badge) => (
+                    <td key={badge.id} style={{ padding: '0 5px' }}>
+                      {badge.linkUrl ? (
+                        <a href={normalizeUrl(badge.linkUrl)} target="_blank" rel="noopener noreferrer">
+                          <img src={badge.imageUrl} alt={badge.altText} height="28" style={{ display: 'block' }} />
+                        </a>
+                      ) : (
+                        <img src={badge.imageUrl} alt={badge.altText} height="28" style={{ display: 'block' }} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      ) : null
+    )
   };
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', padding: '20px', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ padding: '32px', backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid #f0f0f0', maxWidth: '400px', margin: '0 auto' }}>
       <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
         <tbody>
           {layout.map(key => (
@@ -107,6 +137,8 @@ export const Template1: React.FC<TemplateProps> = ({ data, logoSrc }) => {
               {sections[key]}
             </React.Fragment>
           ))}
+          {/* Always try to render badges at the end if not in layout, or use layout badge key */}
+          {(!layout.includes('banner')) && sections.banner}
         </tbody>
       </table>
     </div>

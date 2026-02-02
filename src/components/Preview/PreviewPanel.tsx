@@ -15,7 +15,7 @@ export const PreviewPanel: React.FC = () => {
     }, [data.logoBase64, data.useAutoLogo, data.fullName, data.primaryColor]);
 
     // Get the selected template component
-    const TemplateComponent = getTemplate(selectedTemplate);
+    const TemplateComponent = getTemplate(selectedTemplate as any);
 
     // Check if user has entered minimum data
     const hasMinimumData = data.fullName.trim().length > 0;
@@ -33,7 +33,7 @@ export const PreviewPanel: React.FC = () => {
     }
 
     return (
-        <div className="animate-fade-in">
+        <div className="animate-fade-in" id="signature-preview">
             <TemplateComponent data={data} logoSrc={logoSrc} />
         </div>
     );

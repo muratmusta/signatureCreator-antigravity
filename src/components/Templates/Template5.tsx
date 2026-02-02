@@ -38,9 +38,9 @@ export const Template5: React.FC<TemplateProps> = ({ data, logoSrc }) => {
     social: (
       <tr><td align="center">
         <div style={{ fontSize: '11px', color: '#bbb' }}>
-          {data.socialLinks.linkedin && <a href={data.socialLinks.linkedin} style={{ textDecoration: 'underline', color: '#bbb', margin: '0 5px' }}>LN</a>}
-          {data.socialLinks.twitter && <a href={data.socialLinks.twitter} style={{ textDecoration: 'underline', color: '#bbb', margin: '0 5px' }}>TW</a>}
-          {data.socialLinks.instagram && <a href={data.socialLinks.instagram} style={{ textDecoration: 'underline', color: '#bbb', margin: '0 5px' }}>IG</a>}
+          {data.socialLinks.linkedin && <a href={data.socialLinks.linkedin} style={{ margin: '0 5px' }}><img src="https://img.icons8.com/color/48/linkedin.png" width="16" height="16" alt="LI" style={{ display: 'inline-block' }} /></a>}
+          {data.socialLinks.twitter && <a href={data.socialLinks.twitter} style={{ margin: '0 5px' }}><img src="https://img.icons8.com/color/48/twitter.png" width="16" height="16" alt="TW" style={{ display: 'inline-block' }} /></a>}
+          {data.socialLinks.instagram && <a href={data.socialLinks.instagram} style={{ margin: '0 5px' }}><img src="https://img.icons8.com/color/48/instagram-new.png" width="16" height="16" alt="IG" style={{ display: 'inline-block' }} /></a>}
         </div>
       </td></tr>
     ),

@@ -8,7 +8,7 @@ export interface SignatureData {
     email: string;
     address: string;
     website: string;
-    logoBase64: string; // Base64 encoded image
+    logo?: string; // Base64 encoded image
     useAutoLogo: boolean;
     primaryColor: string;
     socialLinks: {
@@ -17,6 +17,16 @@ export interface SignatureData {
         twitter: string;
     };
     layout: SectionType[];
+    showBranding?: boolean;
+    selectedTemplate?: number;
+    badges?: Badge[];
+}
+
+export interface Badge {
+    id: string;
+    imageUrl: string;
+    altText: string;
+    linkUrl?: string;
 }
 
 export const defaultSignatureData: SignatureData = {
@@ -27,7 +37,7 @@ export const defaultSignatureData: SignatureData = {
     email: '',
     address: '',
     website: '',
-    logoBase64: '',
+    logo: '',
     useAutoLogo: false,
     primaryColor: '#3B82F6',
     socialLinks: {
@@ -36,6 +46,17 @@ export const defaultSignatureData: SignatureData = {
         twitter: '',
     },
     layout: ['avatar', 'info', 'contact', 'social'],
+    showBranding: true,
+    badges: [],
 };
 
-export type TemplateId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type TemplateId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
+
+import { Database } from './supabase';
+
+export type SignatureProject = Omit<Database['public']['Tables']['signatures']['Row'], 'data'> & {
+    data: SignatureData;
+    views?: number;
+    clicks?: number;
+    last_viewed_at?: string;
+};

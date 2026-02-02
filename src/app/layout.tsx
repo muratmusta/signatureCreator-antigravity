@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://signatureos.com'),
   title: "SignatureOS | Professional Email Signature Generator",
   description: "Create beautiful, professional email signatures in seconds. Drag-and-drop editor, cloud saving, and premium templates.",
   keywords: ["email signature", "signature generator", "email footer", "professional signature"],

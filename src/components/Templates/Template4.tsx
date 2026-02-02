@@ -38,8 +38,9 @@ export const Template4: React.FC<TemplateProps> = ({ data, logoSrc }) => {
     ),
     social: (
       <tr><td style={{ paddingTop: '4px' }}>
-        {data.socialLinks.linkedin && <a href={data.socialLinks.linkedin} style={{ color: data.primaryColor, fontSize: '11px', textDecoration: 'none', marginRight: '8px' }}>LinkedIn</a>}
-        {data.socialLinks.twitter && <a href={data.socialLinks.twitter} style={{ color: data.primaryColor, fontSize: '11px', textDecoration: 'none', marginRight: '8px' }}>Twitter</a>}
+        {data.socialLinks.linkedin && <a href={data.socialLinks.linkedin} style={{ marginRight: '8px' }}><img src="https://img.icons8.com/color/48/linkedin.png" width="16" height="16" alt="LI" style={{ display: 'inline-block' }} /></a>}
+        {data.socialLinks.twitter && <a href={data.socialLinks.twitter} style={{ marginRight: '8px' }}><img src="https://img.icons8.com/color/48/twitter.png" width="16" height="16" alt="TW" style={{ display: 'inline-block' }} /></a>}
+        {data.socialLinks.instagram && <a href={data.socialLinks.instagram} style={{ marginRight: '8px' }}><img src="https://img.icons8.com/color/48/instagram-new.png" width="16" height="16" alt="IG" style={{ display: 'inline-block' }} /></a>}
       </td></tr>
     ),
     banner: null as any
@@ -60,6 +61,22 @@ export const Template4: React.FC<TemplateProps> = ({ data, logoSrc }) => {
                   {layout.map(key => <React.Fragment key={key}>{sections[key]}</React.Fragment>)}
                 </tbody>
               </table>
+
+              {data.badges && data.badges.length > 0 && (
+                <div style={{ paddingTop: '12px' }}>
+                  {data.badges.map((badge) => (
+                    <div key={badge.id} style={{ display: 'inline-block', marginRight: '8px' }}>
+                      {badge.linkUrl ? (
+                        <a href={badge.linkUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block' }}>
+                          <img src={badge.imageUrl} alt={badge.altText} height="24" style={{ display: 'block', height: '24px' }} />
+                        </a>
+                      ) : (
+                        <img src={badge.imageUrl} alt={badge.altText} height="24" style={{ display: 'block', height: '24px' }} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </td>
           </tr>
         </tbody>

@@ -1,23 +1,14 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
-    // if "next" is in param, use it as the redirect URL
     const next = searchParams.get("next") ?? "/dashboard";
 
     if (code) {
-        const cookieStore = {
-            getAll() {
-                return request.cookies.getAll();
-            },
-            setAll(cookiesToSet: any[]) {
-                cookiesToSet.forEach(({ name, value, options }) =>
-                    request.cookies.set(name, value)
-                );
-            }
-        };
+        // We need to track cookies that need to be set on the response
+        const cookiesToSet: { name: string; value: string; options?: any }[] = [];
 
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,10 +18,11 @@ export async function GET(request: NextRequest) {
                     getAll() {
                         return request.cookies.getAll();
                     },
-                    setAll(cookiesToSet) {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            request.cookies.set(name, value)
-                        );
+                    setAll(cookies) {
+                        // Store cookies to set them on the response later
+                        cookies.forEach((cookie) => {
+                            cookiesToSet.push(cookie);
+                        });
                     },
                 },
             }
@@ -39,32 +31,19 @@ export async function GET(request: NextRequest) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
-            // Code exchanged successfully. Redirect to dashboard.
-            // Important: We need to return the response with the cookies set.
-            // But wait, createServerClient logic with Middleware handles cookies differently?
-            // Actually, in Route Handler, we just create the client to exchange code.
-            // The 'setAll' above modifies the 'request' headers, but we need to pass cookies to RESPONSE.
+            // Create redirect response
+            const redirectUrl = `${origin}${next}`;
+            const response = NextResponse.redirect(redirectUrl);
 
-            // Correct pattern for Route Handler with @supabase/ssr:
-            // We need to create a response object, copy cookies from the supabase operation into it.
-            // OR simply redirect. Since the exchange happens on the server and writes to the 'jar',
-            // we need a mechanism to persist.
+            // CRITICAL: Set the session cookies on the response
+            cookiesToSet.forEach(({ name, value, options }) => {
+                response.cookies.set(name, value, options);
+            });
 
-            // Let's use the standard boilerplate for Route Handler Auth.
-
-            const forwardedHost = request.headers.get('x-forwarded-host'); // For proxy environments
-            const isLocalEnv = process.env.NODE_ENV === 'development';
-
-            if (isLocalEnv) {
-                return NextResponse.redirect(`${origin}${next}`);
-            } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`);
-            } else {
-                return NextResponse.redirect(`${origin}${next}`);
-            }
+            return response;
         }
     }
 
-    // return the user to an error page with instructions
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+    // Return to login with error
+    return NextResponse.redirect(`${origin}/login?error=auth_failed`);
 }

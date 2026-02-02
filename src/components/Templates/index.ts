@@ -8,6 +8,16 @@ export { Template7 } from './Template7';
 export { Template8 } from './Template8';
 export { Template9 } from './Template9';
 export { Template10 } from './Template10';
+export { Template11 } from './Template11';
+export { Template12 } from './Template12';
+export { Template13 } from './Template13';
+export { Template14 } from './Template14';
+export { Template15 } from './Template15';
+export { Template16 } from './Template16';
+export { Template17 } from './Template17';
+export { Template18 } from './Template18';
+export { Template19 } from './Template19';
+export { Template20 } from './Template20';
 
 import { Template1 } from './Template1';
 import { Template2 } from './Template2';
@@ -19,6 +29,16 @@ import { Template7 } from './Template7';
 import { Template8 } from './Template8';
 import { Template9 } from './Template9';
 import { Template10 } from './Template10';
+import { Template11 } from './Template11';
+import { Template12 } from './Template12';
+import { Template13 } from './Template13';
+import { Template14 } from './Template14';
+import { Template15 } from './Template15';
+import { Template16 } from './Template16';
+import { Template17 } from './Template17';
+import { Template18 } from './Template18';
+import { Template19 } from './Template19';
+import { Template20 } from './Template20';
 import type { TemplateId } from '../../types/signature';
 
 export const templates = {
@@ -32,6 +52,16 @@ export const templates = {
     8: Template8,
     9: Template9,
     10: Template10,
+    11: Template11,
+    12: Template12,
+    13: Template13,
+    14: Template14,
+    15: Template15,
+    16: Template16,
+    17: Template17,
+    18: Template18,
+    19: Template19,
+    20: Template20,
 } as const;
 
 export const getTemplate = (id: TemplateId) => templates[id];
@@ -47,4 +77,14 @@ export const templateNames = {
     8: 'Renkli Blok',
     9: 'İkon Odaklı',
     10: 'Lüks/Kurumsal',
+    11: 'Tech Startup',
+    12: 'Yaratıcı Merkez',
+    13: 'Resmi / Hukuki',
+    14: 'Kompakt Kart',
+    15: 'Sosyal Fenomen',
+    16: 'Geliştirici / Kod',
+    17: 'Emlak / Gayrimenkul',
+    18: 'Tıp / Sağlık',
+    19: 'Akademik / Mezun',
+    20: 'Yönetici / Minimal',
 } as const;

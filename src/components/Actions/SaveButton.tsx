@@ -2,39 +2,60 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Cloud, Loader2, Check } from 'lucide-react';
+import { Cloud, Loader2 } from 'lucide-react';
 import { useSignature } from '@/context/SignatureContext';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
-export const SaveButton: React.FC = () => {
-    const { data, user, selectedTemplate } = useSignature();
+export const SaveButton: React.FC<{ onSave?: () => void }> = ({ onSave }) => {
+    const { data, user, selectedTemplate, projectId, setProjectId } = useSignature();
     const [saving, setSaving] = useState(false);
     const supabase = createClient();
 
     const handleSave = async () => {
         if (!user) {
-            toast.error("Oturum bilgisi bulunamadı.");
+            toast.error("Lütfen önce giriş yapın.");
             return;
         }
 
         setSaving(true);
         try {
-            // Check if user already has a signature, update it. Or just insert new one?
-            // For simplicity, let's insert a new one OR update last one.
-            // Let's just Insert for log history.
+            if (projectId) {
+                // UPDATE existing project
+                const { error } = await supabase
+                    .from('signatures')
+                    .update({
+                        title: data.fullName || 'İsimsiz İmza',
+                        data: { ...data, selectedTemplate } as any,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', projectId);
 
-            const { error } = await supabase
-                .from('signatures')
-                .insert({
-                    user_id: user.id,
-                    title: data.fullName || 'İsimsiz İmza',
-                    data: { ...data, selectedTemplate } as any // Include selectedTemplate in saved JSON
-                });
+                if (error) throw error;
+                toast.success("Proje güncellendi!");
+                onSave?.();
+            } else {
+                // INSERT new project
+                const { data: insertedData, error } = await supabase
+                    .from('signatures')
+                    .insert({
+                        user_id: user.id,
+                        title: data.fullName || 'İsimsiz İmza',
+                        data: { ...data, selectedTemplate } as any
+                    })
+                    .select()
+                    .single();
 
-            if (error) throw error;
+                if (error) throw error;
 
-            toast.success("İmza buluta kaydedildi!");
+                // Set the new project ID so future saves UPDATE instead of INSERT
+                if (insertedData) {
+                    setProjectId(insertedData.id);
+                }
+
+                toast.success("İmza buluta kaydedildi!");
+                onSave?.();
+            }
         } catch (error: any) {
             console.error(error);
             toast.error("Kaydetme başarısız: " + error.message);
@@ -46,13 +67,13 @@ export const SaveButton: React.FC = () => {
     return (
         <Button
             variant="outline"
-            size="sm"
-            className="gap-2 border-forest/20 text-forest hover:bg-forest/5"
+            size="lg"
+            className="gap-2.5 h-11 px-5 rounded-2xl font-black text-xs tracking-widest bg-forest text-white border-forest hover:bg-forest/90 shadow-premium transition-all active:scale-95 disabled:opacity-70"
             onClick={handleSave}
             disabled={saving}
         >
-            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Cloud className="w-3.5 h-3.5" />}
-            {saving ? 'Kaydediliyor...' : 'Kaydet'}
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Cloud className="w-4 h-4 text-lime" />}
+            {saving ? 'KAYDEDİLİYOR' : projectId ? 'GÜNCELLE' : 'PROJEYİ KAYDET'}
         </Button>
     );
 };

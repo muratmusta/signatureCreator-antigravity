@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, LayoutGrid, LayoutList, Trash2, Download, CheckSquare, X, Filter } from 'lucide-react';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
+import { Search, LayoutGrid, LayoutList, Filter, FileSignature } from 'lucide-react';
 import { ProjectCard } from '@/components/Dashboard/ProjectCard';
+import { StatsCards } from '@/components/Dashboard/StatsCards';
+import { EmptyState } from '@/components/Dashboard/EmptyState';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import type { SignatureProject } from '@/types/signature';
 import { toast } from 'sonner';
-import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function DashboardPage() {
     const [signatures, setSignatures] = useState<SignatureProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchSignatures = async () => {
@@ -24,7 +24,7 @@ export default function DashboardPage() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
 
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('signatures')
                 .select('*')
                 .eq('user_id', user.id)
@@ -41,163 +41,133 @@ export default function DashboardPage() {
         sig.data.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const toggleSelect = (id: string) => {
-        setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-    };
+    const handleDelete = async (id: string) => {
+        const supabase = createClient();
+        const { error } = await supabase.from('signatures').delete().eq('id', id);
 
-    const toggleSelectAll = () => {
-        if (selectedIds.length === filteredSignatures.length) {
-            setSelectedIds([]);
+        if (!error) {
+            setSignatures(prev => prev.filter(s => s.id !== id));
+            toast.success('Tasarım silindi.');
         } else {
-            setSelectedIds(filteredSignatures.map(s => s.id));
+            toast.error('Tasarım silinirken bir hata oluştu.');
         }
     };
 
-    const handleDeleteSelected = async () => {
+    const handleDuplicate = async (project: SignatureProject) => {
         const supabase = createClient();
-        const { error } = await supabase.from('signatures').delete().in('id', selectedIds);
+        const { data: { user } } = await supabase.auth.getUser();
 
-        if (!error) {
-            setSignatures(prev => prev.filter(s => !selectedIds.includes(s.id)));
-            setSelectedIds([]);
-            toast.success(`${selectedIds.length} tasarım silindi.`);
+        if (!user) return;
+
+        const newProject = {
+            ...project,
+            id: undefined, // Let Supabase generate a new ID
+            title: `${project.title} (Kopya)`,
+            updated_at: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+        };
+        // Remove the ID explicitly to be safe
+        delete (newProject as any).id;
+
+        const { data, error } = await supabase
+            .from('signatures')
+            .insert(newProject)
+            .select()
+            .single();
+
+        if (data) {
+            setSignatures(prev => [data, ...prev]);
+            toast.success('Tasarım kopyalandı.');
+        } else if (error) {
+            console.error('Duplicate error:', error);
+            toast.error('Tasarım kopyalanırken bir hata oluştu.');
         }
     };
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div className="flex flex-col items-center justify-center min-h-[60vh] bg-background">
                 <LoadingSpinner size="lg" />
-                <p className="mt-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Veriler Yükleniyor</p>
+                <p className="mt-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Veriler Yükleniyor</p>
             </div>
         );
     }
 
     return (
-        <DashboardLayout>
-            <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
-                {/* Dashboard Header */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex-1 w-full flex flex-col">
+            <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-10 space-y-10">
+                {/* Header & Toolbar - Refined */}
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-8 border-b border-border/50">
                     <div>
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Projelerim</h1>
-                        <p className="text-sm font-medium text-gray-400 mt-1">Toplam {signatures.length} adet tasarım oluşturuldu.</p>
+                        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground uppercase leading-none">
+                            TASARIMLARIM
+                        </h1>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-[0.2em] mt-3">
+                            Tüm projelerinizi buradan yönetin
+                        </p>
                     </div>
-                    <Link href="/editor/new">
-                        <Button className="h-11 px-6 bg-black text-white hover:bg-gray-800 rounded-lg shadow-sm font-bold gap-2">
-                            <Plus className="w-5 h-5" /> Yeni Tasarım
-                        </Button>
-                    </Link>
-                </div>
 
-                {/* Toolbar */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4 border-y border-gray-100/50">
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center p-1 bg-gray-100 rounded-lg">
+                    <div className="flex items-center gap-4">
+                        {/* View Switcher - Premium Style */}
+                        <div className="flex items-center p-1.5 bg-white border border-border rounded-2xl shadow-sm">
                             <Button
-                                variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-                                size="icon"
-                                className={`h-8 w-8 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-400'}`}
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "h-10 px-5 rounded-xl transition-all font-black text-[10px] tracking-widest uppercase",
+                                    viewMode === 'grid' ? "bg-secondary text-secondary-foreground shadow-sm" : "text-slate-400 hover:text-slate-600"
+                                )}
                                 onClick={() => setViewMode('grid')}
                             >
-                                <LayoutGrid className="w-4 h-4" />
+                                <LayoutGrid className="w-4 h-4 mr-2" />
+                                IZGARA
                             </Button>
                             <Button
-                                variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-                                size="icon"
-                                className={`h-8 w-8 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm' : 'text-gray-400'}`}
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "h-10 px-5 rounded-xl transition-all font-black text-[10px] tracking-widest uppercase",
+                                    viewMode === 'list' ? "bg-secondary text-secondary-foreground shadow-sm" : "text-slate-400 hover:text-slate-600"
+                                )}
                                 onClick={() => setViewMode('list')}
                             >
-                                <LayoutList className="w-4 h-4" />
+                                <LayoutList className="w-4 h-4 mr-2" />
+                                LİSTE
                             </Button>
                         </div>
-                        <div className="h-4 w-px bg-gray-200 mx-2" />
-                        <Button variant="ghost" size="sm" className="h-9 px-3 gap-2 text-gray-500 font-bold hover:text-black">
-                            <Filter className="w-4 h-4" /> Filtrele
-                        </Button>
-                    </div>
 
-                    <div className="relative w-full md:w-80 group">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-black transition-colors" />
-                        <input
-                            placeholder="Tasarımlarda ara..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-10 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm font-medium focus:border-black focus:ring-4 focus:ring-black/5 outline-none transition-all"
-                        />
+                        <Button variant="outline" className="h-14 px-8 rounded-2xl gap-3 font-black text-[10px] tracking-[0.2em] uppercase border-border bg-white hover:bg-slate-50 shadow-sm transition-all group">
+                            <Filter className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                            FİLTRELE
+                        </Button>
                     </div>
                 </div>
 
-                {/* Grid/List Content */}
+                {/* Content Section */}
                 {signatures.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-24 bg-white border border-dashed border-gray-200 rounded-2xl text-center px-6">
-                        <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mb-6">
-                            <Plus className="w-8 h-8 text-gray-300" />
-                        </div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">Henüz Tasarım Yok</h2>
-                        <p className="text-gray-400 text-sm font-medium max-w-sm mb-8">E-posta kimliğinizi güçlendirmek için ilk imzanızı şimdi oluşturun.</p>
-                        <Link href="/editor/new">
-                            <Button className="h-11 px-8 rounded-lg font-bold">İlk İmzayı Oluştur</Button>
-                        </Link>
-                    </div>
+                    <EmptyState searchQuery="" />
+                ) : filteredSignatures.length === 0 ? (
+                    <EmptyState searchQuery={searchQuery} />
                 ) : (
-                    <div className={viewMode === 'grid'
-                        ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
-                        : "flex flex-col gap-4"
-                    }>
+                    <div className={cn(
+                        viewMode === 'grid'
+                            ? "grid grid-cols-1 xl:grid-cols-2 gap-8 pb-20"
+                            : "flex flex-col gap-6 pb-20"
+                    )}>
                         {filteredSignatures.map(project => (
                             <ProjectCard
                                 key={project.id}
                                 project={project}
                                 viewMode={viewMode}
-                                isSelected={selectedIds.includes(project.id)}
-                                onSelect={toggleSelect}
-                                onDelete={handleDeleteSelected}
-                                onDuplicate={() => { }} // TODO
+                                onDelete={handleDelete}
+                                onDuplicate={handleDuplicate}
+                                projectColor={project.data.primaryColor}
+                                projectName="Kişisel Proje"
                             />
                         ))}
                     </div>
                 )}
-
-                {/* Floating Bulk Action Bar */}
-                {selectedIds.length > 0 && (
-                    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[70] animate-in slide-in-from-bottom-10 duration-500">
-                        <div className="flex items-center gap-6 px-6 py-4 bg-black text-white rounded-2xl shadow-2xl border border-white/10 ring-8 ring-black/5">
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    onClick={toggleSelectAll}
-                                    variant="ghost"
-                                    className="h-9 px-3 gap-2 text-white/70 hover:text-white hover:bg-white/10 font-bold text-xs"
-                                >
-                                    <CheckSquare className="w-4 h-4" />
-                                    {selectedIds.length === signatures.length ? 'Seçimi Kaldır' : 'Tümünü Seç'}
-                                </Button>
-                                <div className="h-4 w-px bg-white/20" />
-                                <span className="text-xs font-bold text-white tracking-wide">
-                                    {selectedIds.length} Proje Seçildi
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    onClick={handleDeleteSelected}
-                                    variant="destructive"
-                                    size="sm"
-                                    className="h-9 px-4 rounded-xl font-bold text-xs gap-2 shadow-lg"
-                                >
-                                    <Trash2 className="w-4 h-4" /> Sil
-                                </Button>
-                                <Button
-                                    onClick={() => setSelectedIds([])}
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-9 w-9 text-white/50 hover:text-white rounded-xl"
-                                >
-                                    <X className="w-5 h-5" />
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
-        </DashboardLayout>
+        </div>
     );
 }

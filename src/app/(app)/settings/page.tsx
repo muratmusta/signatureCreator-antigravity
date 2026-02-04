@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { Mail, User as UserIcon, Shield, LogOut, Building2, CreditCard, Bell, Sparkles, ChevronRight, CheckCircle2, Globe, PlusCircle, Globe2 } from 'lucide-react';
 import Link from 'next/link';
-import { UserNav } from '@/components/Dashboard/UserNav';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 
 export default function SettingsPage() {

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import {
@@ -20,10 +20,10 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { useSignature } from '@/context/SignatureContext';
 import { GripVertical, User, Briefcase, Phone, Hash, Image as ImageIcon } from 'lucide-react';
-import { SectionType } from '@/types/signature';
+import type { SectionType } from '@/types/signature';
 import { cn } from '@/lib/utils';
 
-const SECTION_LABELS: Record<SectionType, { label: string; icon: React.FC<any> }> = {
+const SECTION_LABELS: Record<SectionType, { label: string; icon: React.FC<{ className?: string }> }> = {
     avatar: { label: 'Logo / Fotoğraf', icon: ImageIcon },
     info: { label: 'Kişisel Bilgiler', icon: User },
     contact: { label: 'İletişim Bilgileri', icon: Phone },
@@ -48,7 +48,7 @@ function SortableItem({ id }: SortableItemProps) {
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        zIndex: isDragging ? 50 : 'auto',
+        zIndex: isDragging ? 50 : 'auto' as const,
     };
 
     const Meta = SECTION_LABELS[id];
@@ -59,30 +59,33 @@ function SortableItem({ id }: SortableItemProps) {
             ref={setNodeRef}
             style={style}
             className={cn(
-                "flex items-center gap-3 p-3 bg-card border border-border rounded-lg mb-2 shadow-sm select-none transition-colors",
-                isDragging ? "opacity-50 ring-2 ring-primary" : "hover:bg-accent/50"
+                "flex items-center gap-4 p-4 bg-card border border-border rounded-2xl mb-3 shadow-sm select-none transition-all",
+                isDragging ? "opacity-30 ring-4 ring-primary/20 scale-105" : "hover:border-primary/30 hover:bg-muted/10 group focus-within:border-primary active:scale-[0.98]"
             )}
         >
             <div
                 {...attributes}
                 {...listeners}
-                className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground p-1"
+                className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-primary p-1 transition-colors"
             >
-                <GripVertical className="w-4 h-4" />
+                <GripVertical className="w-5 h-5" />
             </div>
 
-            <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted text-muted-foreground">
-                <Icon className="w-4 h-4" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+                <Icon className="w-5 h-5" />
             </div>
 
-            <span className="text-sm font-medium flex-1">{Meta.label}</span>
+            <span className="text-sm font-black flex-1 text-foreground uppercase tracking-tight">{Meta.label}</span>
+
+            {/* Visual indicator of position */}
+            <div className="w-2 h-2 rounded-full bg-border" />
         </div>
     );
 }
 
 export function SortableLayers() {
     const { data, updateData } = useSignature();
-    // Default layout if undefined
+    // Ensure we have a valid layout array
     const items = data.layout || ['avatar', 'info', 'contact', 'social'];
 
     const sensors = useSensors(
@@ -111,21 +114,26 @@ export function SortableLayers() {
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
         >
-            <div className="p-4 space-y-4">
-                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                    Düzen Sıralaması
-                </h3>
-                <p className="text-xs text-muted-foreground mb-4">
-                    İmza parçalarının yerini değiştirmek için sürükleyin.
-                </p>
-                <SortableContext
-                    items={items}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {items.map((id) => (
-                        <SortableItem key={id} id={id} />
-                    ))}
-                </SortableContext>
+            <div className="p-6 space-y-6">
+                <div>
+                    <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">
+                        Düzen Sıralaması
+                    </h3>
+                    <p className="text-[11px] text-muted-foreground font-bold leading-relaxed opacity-70">
+                        İmza parçalarının yerini değiştirmek için sürükleyip bırakın. Bu işlem tasarımı anında günceller.
+                    </p>
+                </div>
+
+                <div className="bg-muted/10 p-3 rounded-[2rem] border border-border">
+                    <SortableContext
+                        items={items}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {items.map((id) => (
+                            <SortableItem key={id} id={id} />
+                        ))}
+                    </SortableContext>
+                </div>
             </div>
         </DndContext>
     );

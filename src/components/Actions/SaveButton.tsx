@@ -66,13 +66,13 @@ export const SaveButton: React.FC<{ onSave?: () => void }> = ({ onSave }) => {
 
     return (
         <Button
-            variant="outline"
+            variant="default"
             size="lg"
-            className="gap-2.5 h-11 px-5 rounded-2xl font-black text-xs tracking-widest bg-forest text-white border-forest hover:bg-forest/90 shadow-premium transition-all active:scale-95 disabled:opacity-70"
+            className="gap-2.5 h-11 px-6 rounded-2xl font-black text-[10px] tracking-[0.15em] transition-all active:scale-95 disabled:opacity-70 shadow-glow"
             onClick={handleSave}
             disabled={saving}
         >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Cloud className="w-4 h-4 text-lime" />}
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Cloud className="w-4 h-4" />}
             {saving ? 'KAYDEDİLİYOR' : projectId ? 'GÜNCELLE' : 'PROJEYİ KAYDET'}
         </Button>
     );

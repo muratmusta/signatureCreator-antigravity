@@ -28,7 +28,7 @@ export const MarketingCTA: React.FC<MarketingCTAProps> = ({ className, variant =
     }, []);
 
     if (loading) {
-        return <div className={`h-12 w-48 bg-gray-100 animate-pulse rounded-full ${className}`}></div>;
+        return <div className={`h-12 w-48 bg-white/50 animate-pulse rounded-full ${className}`}></div>;
     }
 
     if (user) {
@@ -36,9 +36,10 @@ export const MarketingCTA: React.FC<MarketingCTAProps> = ({ className, variant =
             <Link href="/dashboard">
                 <Button
                     size={size}
-                    className={`gap-2 ${variant === 'primary' ? 'bg-forest hover:bg-forest/90' : ''} ${className}`}
+                    variant="default"
+                    className={`gap-3 bg-[#163300] text-[#9FE870] hover:bg-[#163300]/90 transition-all font-black text-xs uppercase tracking-widest ${className}`}
                 >
-                    <LayoutDashboard className="w-5 h-5" /> Dashboard'a Git <ArrowRight className="w-4 h-4" />
+                    <LayoutDashboard className="w-5 h-5" /> DASHBOARD'A GİT <ArrowRight className="w-4 h-4" />
                 </Button>
             </Link>
         );
@@ -48,9 +49,10 @@ export const MarketingCTA: React.FC<MarketingCTAProps> = ({ className, variant =
         <Link href="/editor/new">
             <Button
                 size={size}
-                className={`gap-2 ${variant === 'primary' ? 'bg-gray-900 hover:bg-black text-white' : ''} ${className}`}
+                variant="default"
+                className={`gap-3 bg-[#9FE870] text-[#163300] hover:bg-[#163300] hover:text-[#9FE870] transition-all font-black text-xs uppercase tracking-widest border-none shadow-neon ${className}`}
             >
-                Hemen Tasarlamaya Başla <ArrowRight className="w-5 h-5" />
+                HEMEN TASARLAMAYA BAŞLA <ArrowRight className="w-5 h-5" />
             </Button>
         </Link>
     );

@@ -56,7 +56,4 @@ import { Database } from './supabase';
 
 export type SignatureProject = Omit<Database['public']['Tables']['signatures']['Row'], 'data'> & {
     data: SignatureData;
-    views?: number;
-    clicks?: number;
-    last_viewed_at?: string;
 };

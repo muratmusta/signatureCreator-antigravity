@@ -157,7 +157,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ targetElementId = 's
             <Button
                 variant="default"
                 size="lg"
-                className="gap-2.5 h-11 px-5 rounded-2xl font-black text-xs tracking-widest bg-forest text-white border-forest hover:bg-forest/90 shadow-premium transition-all active:scale-95 disabled:opacity-70 group"
+                className="gap-2.5 h-11 px-6 rounded-2xl font-black text-[10px] tracking-[0.15em] transition-all active:scale-95 disabled:opacity-70 shadow-glow group"
                 onClick={() => setShowMenu(!showMenu)}
                 disabled={exporting}
             >
@@ -176,60 +176,60 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ targetElementId = 's
                         onClick={() => setShowMenu(false)}
                     />
 
-                    <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-gray-100 rounded-3xl shadow-premium-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                        <div className="p-3 bg-gray-50/50 border-b border-gray-100">
-                            <span className="text-[10px] font-black tracking-widest text-gray-400 uppercase px-2">FORMAT SEÇİN</span>
+                    <div className="absolute right-0 top-full mt-3 w-72 bg-card border border-border rounded-[2rem] shadow-glow-sm z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="p-4 bg-muted/20 border-b border-border">
+                            <span className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase px-2">Format Seçin</span>
                         </div>
 
-                        <div className="p-2 space-y-1">
+                        <div className="p-3 space-y-2">
                             <button
                                 onClick={exportToHTML}
-                                className="w-full p-3 rounded-2xl text-left hover:bg-forest/5 transition-all flex items-center gap-4 group"
+                                className="w-full p-3 rounded-2xl text-left hover:bg-primary/10 transition-all flex items-center gap-4 group"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-forest/5 flex items-center justify-center group-hover:bg-forest/10 transition-colors">
-                                    <Code className="w-5 h-5 text-forest" />
+                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all group-hover:scale-105">
+                                    <Code className="w-5 h-5 text-primary" />
                                 </div>
-                                <div>
-                                    <div className="font-bold text-gray-900 text-sm">HTML Olarak İndir</div>
-                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">EMAIL İSTEMCİLERİ</div>
+                                <div className="min-w-0">
+                                    <div className="font-black text-foreground text-sm uppercase tracking-tight truncate">HTML OLARAK İNDİR</div>
+                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">En İyi Uyumluluk</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={exportToPNG}
-                                className="w-full p-3 rounded-2xl text-left hover:bg-forest/5 transition-all flex items-center gap-4 group"
+                                className="w-full p-3 rounded-2xl text-left hover:bg-primary/10 transition-all flex items-center gap-4 group"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-forest/5 flex items-center justify-center group-hover:bg-forest/10 transition-colors">
-                                    <FileImage className="w-5 h-5 text-forest" />
+                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all group-hover:scale-105">
+                                    <FileImage className="w-5 h-5 text-primary" />
                                 </div>
-                                <div>
-                                    <div className="font-bold text-gray-900 text-sm">PNG Olarak İndir</div>
-                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">YÜKSEK KALİTE GÖRSEL</div>
+                                <div className="min-w-0">
+                                    <div className="font-black text-foreground text-sm uppercase tracking-tight truncate">PNG OLARAK İNDİR</div>
+                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">Görsel Formatı</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={exportToPDF}
-                                className="w-full p-3 rounded-2xl text-left hover:bg-forest/5 transition-all flex items-center gap-4 group"
+                                className="w-full p-3 rounded-2xl text-left hover:bg-primary/10 transition-all flex items-center gap-4 group"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-forest/5 flex items-center justify-center group-hover:bg-forest/10 transition-colors">
-                                    <FileType className="w-5 h-5 text-forest" />
+                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all group-hover:scale-105">
+                                    <FileType className="w-5 h-5 text-primary" />
                                 </div>
-                                <div>
-                                    <div className="font-bold text-gray-900 text-sm">PDF Olarak İndir</div>
-                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">YAZDIRILABİLİR FORMAT</div>
+                                <div className="min-w-0">
+                                    <div className="font-black text-foreground text-sm uppercase tracking-tight truncate">PDF OLARAK İNDİR</div>
+                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">Yazdırılabilir</div>
                                 </div>
                             </button>
                             <button
                                 onClick={exportToVCard}
-                                className="w-full p-3 rounded-2xl text-left hover:bg-forest/5 transition-all flex items-center gap-4 group"
+                                className="w-full p-3 rounded-2xl text-left hover:bg-primary/10 transition-all flex items-center gap-4 group"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-forest/5 flex items-center justify-center group-hover:bg-forest/10 transition-colors">
-                                    <QrCode className="w-5 h-5 text-forest" />
+                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all group-hover:scale-105">
+                                    <QrCode className="w-5 h-5 text-primary" />
                                 </div>
-                                <div>
-                                    <div className="font-bold text-gray-900 text-sm">vCard QR Kodu</div>
-                                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">MOBİL REHBER TASARIMI</div>
+                                <div className="min-w-0">
+                                    <div className="font-black text-foreground text-sm uppercase tracking-tight truncate">vCard QR Kodu</div>
+                                    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">Akıllı Rehber</div>
                                 </div>
                             </button>
                         </div>

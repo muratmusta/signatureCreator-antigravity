@@ -29,37 +29,36 @@ export const Header = () => {
     }, []);
 
     return (
-        <header className="px-6 h-20 flex items-center justify-between border-b border-gray-100 fixed w-full bg-white/80 backdrop-blur-md z-50 top-0 transition-all duration-300">
+        <header className="px-8 h-24 flex items-center justify-between border-b border-border/50 fixed w-full bg-[#F2F5F7]/80 backdrop-blur-xl z-50 top-0 transition-all duration-300">
             <div className="flex items-center gap-2">
-                <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className="w-8 h-8 bg-forest rounded-lg flex items-center justify-center text-white font-bold shadow-sm">S</div>
-                    <span className="font-bold text-xl tracking-tight text-gray-900">SignatureOS</span>
+                <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+                    <div className="w-10 h-10 bg-[#163300] rounded-xl flex items-center justify-center text-[#9FE870] font-black text-xl shadow-lg transition-transform group-hover:scale-110">S</div>
+                    <span className="font-extrabold text-2xl tracking-tighter text-[#163300] uppercase">Signature<span className="text-[#163300]/50">OS</span></span>
                 </Link>
             </div>
 
-            <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-600">
-                <a href="/#features" className="hover:text-forest transition-colors">Özellikler</a>
-                <a href="/#pricing" className="hover:text-forest transition-colors">Fiyatlandırma</a>
-                <a href="/#templates" className="hover:text-forest transition-colors">Şablonlar</a>
+            <nav className="hidden md:flex gap-10 text-[11px] font-black text-[#64748b] uppercase tracking-[0.2em]">
+                <a href="/#features" className="hover:text-[#163300] transition-colors">Özellikler</a>
+                <a href="/#pricing" className="hover:text-[#163300] transition-colors">Fiyatlandırma</a>
+                <a href="/#templates" className="hover:text-[#163300] transition-colors">Şablonlar</a>
             </nav>
 
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-6 items-center">
                 {loading ? (
-                    // Loading skeleton
-                    <div className="h-9 w-24 bg-gray-100 rounded-md animate-pulse"></div>
+                    <div className="h-12 w-32 bg-white/50 rounded-full animate-pulse"></div>
                 ) : user ? (
                     <Link href="/dashboard">
-                        <Button className="bg-forest hover:bg-forest/90 text-white font-semibold shadow-lg shadow-forest/20 gap-2">
-                            <LayoutDashboard className="w-4 h-4" /> Dashboard'a Git
+                        <Button className="bg-[#163300] hover:bg-[#163300]/90 text-[#9FE870] font-black text-[11px] uppercase tracking-widest px-8 h-12 rounded-full shadow-lg gap-2">
+                            <LayoutDashboard className="w-4 h-4" /> DASHBOARD
                         </Button>
                     </Link>
                 ) : (
                     <>
                         <Link href="/login">
-                            <Button variant="ghost" className="text-gray-600">Giriş Yap</Button>
+                            <Button variant="ghost" className="text-[#163300] font-black text-[11px] uppercase tracking-widest hover:bg-white/50 rounded-full px-6">Giriş Yap</Button>
                         </Link>
                         <Link href="/editor/new">
-                            <Button className="bg-forest hover:bg-forest/90 text-white font-semibold shadow-lg shadow-forest/20">
+                            <Button className="bg-[#9FE870] text-[#163300] hover:bg-[#163300] hover:text-[#9FE870] font-black text-[11px] uppercase tracking-widest px-8 h-12 rounded-full shadow-neon transition-all border-none">
                                 Ücretsiz Başla
                             </Button>
                         </Link>

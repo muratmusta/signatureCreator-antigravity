@@ -67,26 +67,20 @@ export function DashboardSidebar() {
             <SidebarContent className="px-2 py-4">
                 <div className="space-y-6">
                     {/* New Design - Action */}
-                    {!collapsed && (
-                        <div className="px-2">
-                            <Link href="/editor/new" className="block">
+                    <div className={cn("px-2 transition-all duration-300", collapsed ? "px-0 flex justify-center" : "")}>
+                        <Link href="/editor/new" className={cn("block", collapsed ? "w-10" : "w-full")}>
+                            {collapsed ? (
+                                <Button size="icon" className="w-10 h-10 rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-lg hover:scale-110 active:scale-95 transition-all">
+                                    <Plus className="w-5 h-5" />
+                                </Button>
+                            ) : (
                                 <Button className="w-full justify-start gap-3 rounded-xl h-11 font-bold text-xs uppercase tracking-wider px-4 bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90 transition-all shadow-[0_0_15px_rgba(159,232,112,0.2)]">
                                     <Plus className="w-4 h-4 flex-shrink-0" />
                                     <span>Yeni Tasarım</span>
                                 </Button>
-                            </Link>
-                        </div>
-                    )}
-
-                    {collapsed && (
-                        <div className="flex justify-center pb-2">
-                            <Link href="/editor/new">
-                                <Button size="icon" className="w-10 h-10 rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
-                                    <Plus className="w-5 h-5" />
-                                </Button>
-                            </Link>
-                        </div>
-                    )}
+                            )}
+                        </Link>
+                    </div>
 
                     {/* Management Group */}
                     <div className="space-y-1">
@@ -95,19 +89,23 @@ export function DashboardSidebar() {
                                 MENÜ
                             </p>
                         )}
-                        <SidebarMenu className="px-2 gap-1">
+                        <SidebarMenu className={cn("gap-1", collapsed ? "px-0 items-center" : "px-2")}>
                             {mainNavItems.map((item) => {
                                 const active = isActive(item.url);
                                 return (
-                                    <SidebarMenuItem key={item.url}>
+                                    <SidebarMenuItem key={item.url} className={cn(collapsed ? "flex justify-center w-full" : "")}>
                                         <SidebarMenuButton asChild isActive={active} tooltip={item.title} className={cn(
-                                            "h-10 px-3 rounded-lg transition-all duration-200 w-full",
+                                            "h-10 transition-all duration-200",
+                                            collapsed ? "w-10 px-0 justify-center" : "px-3 w-full rounded-lg",
                                             active
                                                 ? "bg-sidebar-primary text-sidebar-primary-foreground font-bold shadow-sm"
                                                 : "text-white/70 hover:text-white hover:bg-white/10"
                                         )}>
-                                            <Link href={item.url} className="flex items-center w-full">
-                                                <item.icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-sidebar-primary-foreground" : "opacity-80")} />
+                                            <Link href={item.url} className={cn("flex items-center", collapsed ? "justify-center" : "w-full")}>
+                                                <item.icon className={cn(
+                                                    "w-4 h-4 flex-shrink-0 transition-colors",
+                                                    active ? "text-white" : "opacity-80"
+                                                )} />
                                                 {!collapsed && <span className="text-xs font-semibold tracking-wide ml-3 truncate">{item.title}</span>}
                                             </Link>
                                         </SidebarMenuButton>
@@ -124,19 +122,23 @@ export function DashboardSidebar() {
                                 DESTEK
                             </p>
                         )}
-                        <SidebarMenu className="px-2 gap-1">
+                        <SidebarMenu className={cn("gap-1", collapsed ? "px-0 items-center" : "px-2")}>
                             {bottomNavItems.map((item) => {
                                 const active = isActive(item.url);
                                 return (
-                                    <SidebarMenuItem key={item.url}>
+                                    <SidebarMenuItem key={item.url} className={cn(collapsed ? "flex justify-center w-full" : "")}>
                                         <SidebarMenuButton asChild isActive={active} tooltip={item.title} className={cn(
-                                            "h-10 px-3 rounded-lg transition-all duration-200 w-full",
+                                            "h-10 transition-all duration-200",
+                                            collapsed ? "w-10 px-0 justify-center" : "px-3 w-full rounded-lg",
                                             active
-                                                ? "bg-sidebar-primary text-sidebar-primary-foreground font-bold"
+                                                ? "bg-sidebar-primary text-sidebar-primary-foreground font-bold shadow-sm"
                                                 : "text-white/70 hover:text-white hover:bg-white/10"
                                         )}>
-                                            <Link href={item.url} className="flex items-center w-full">
-                                                <item.icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-sidebar-primary-foreground" : "opacity-80")} />
+                                            <Link href={item.url} className={cn("flex items-center", collapsed ? "justify-center" : "w-full")}>
+                                                <item.icon className={cn(
+                                                    "w-4 h-4 flex-shrink-0 transition-colors",
+                                                    active ? "text-white" : "opacity-80"
+                                                )} />
                                                 {!collapsed && <span className="text-xs font-semibold tracking-wide ml-3 truncate">{item.title}</span>}
                                             </Link>
                                         </SidebarMenuButton>
@@ -148,12 +150,15 @@ export function DashboardSidebar() {
                 </div>
             </SidebarContent>
 
-            <SidebarFooter className="p-4">
-                <SidebarMenu>
-                    <SidebarMenuItem>
+            <SidebarFooter className={cn("p-4", collapsed ? "px-0 flex justify-center" : "px-4")}>
+                <SidebarMenu className={cn(collapsed ? "items-center" : "")}>
+                    <SidebarMenuItem className={cn(collapsed ? "flex justify-center w-full" : "")}>
                         <SidebarMenuButton
-                            onClick={toggleSidebar}
-                            className="w-full justify-start gap-3 rounded-lg text-white/40 hover:text-white hover:bg-white/5 transition-all h-10 px-3"
+                            onClick={() => toggleSidebar()}
+                            className={cn(
+                                "h-10 transition-all text-white/40 hover:text-white hover:bg-white/5",
+                                collapsed ? "w-10 p-0 justify-center rounded-xl" : "w-full justify-start gap-3 rounded-lg px-3"
+                            )}
                         >
                             <PanelLeft className="h-4 w-4 flex-shrink-0" />
                             {!collapsed && <span className="text-[10px] font-bold uppercase tracking-wider">Daralt</span>}

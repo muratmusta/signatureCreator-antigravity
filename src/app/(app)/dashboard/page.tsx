@@ -12,11 +12,13 @@ import type { SignatureProject } from '@/types/signature';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
+import { useSearch } from '@/context/SearchContext';
+
 export default function DashboardPage() {
     const [signatures, setSignatures] = useState<SignatureProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-    const [searchQuery, setSearchQuery] = useState('');
+    const { searchQuery } = useSearch();
 
     useEffect(() => {
         const fetchSignatures = async () => {
@@ -94,54 +96,56 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="flex-1 w-full flex flex-col">
-            <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-10 space-y-10">
-                {/* Header & Toolbar - Refined */}
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-8 border-b border-border/50">
+        <div className="flex-1 w-full flex flex-col bg-slate-50/30">
+            <div className="w-full max-w-[1400px] mx-auto px-8 sm:px-12 py-12 space-y-12">
+                {/* Header & Toolbar - Apple-like Minimalist */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
-                        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground uppercase leading-none">
-                            TASARIMLARIM
+                        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground leading-tight">
+                            Tasarımlarım
                         </h1>
-                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-[0.2em] mt-3">
+                        <p className="text-sm font-medium text-muted-foreground mt-1.5 opacity-70">
                             Tüm projelerinizi buradan yönetin
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        {/* View Switcher - Premium Style */}
-                        <div className="flex items-center p-1.5 bg-white border border-border rounded-2xl shadow-sm">
+                    <div className="flex flex-wrap items-center gap-4">
+                        {/* View Switcher - Minimalist Style */}
+                        <div className="flex items-center p-1 bg-white border border-border/50 rounded-xl shadow-sm">
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 className={cn(
-                                    "h-10 px-5 rounded-xl transition-all font-black text-[10px] tracking-widest uppercase",
+                                    "h-9 px-4 rounded-lg transition-all font-bold text-[10px] tracking-wider uppercase",
                                     viewMode === 'grid' ? "bg-secondary text-secondary-foreground shadow-sm" : "text-slate-400 hover:text-slate-600"
                                 )}
                                 onClick={() => setViewMode('grid')}
                             >
-                                <LayoutGrid className="w-4 h-4 mr-2" />
+                                <LayoutGrid className="w-3.5 h-3.5 mr-2" />
                                 IZGARA
                             </Button>
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 className={cn(
-                                    "h-10 px-5 rounded-xl transition-all font-black text-[10px] tracking-widest uppercase",
+                                    "h-9 px-4 rounded-lg transition-all font-bold text-[10px] tracking-wider uppercase",
                                     viewMode === 'list' ? "bg-secondary text-secondary-foreground shadow-sm" : "text-slate-400 hover:text-slate-600"
                                 )}
                                 onClick={() => setViewMode('list')}
                             >
-                                <LayoutList className="w-4 h-4 mr-2" />
+                                <LayoutList className="w-3.5 h-3.5 mr-2" />
                                 LİSTE
                             </Button>
                         </div>
 
-                        <Button variant="outline" className="h-14 px-8 rounded-2xl gap-3 font-black text-[10px] tracking-[0.2em] uppercase border-border bg-white hover:bg-slate-50 shadow-sm transition-all group">
-                            <Filter className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                        <Button variant="outline" className="h-11 px-6 rounded-xl gap-2 font-bold text-[10px] tracking-wider uppercase border-border/60 bg-white hover:bg-slate-50 shadow-sm transition-all text-slate-600">
+                            <Filter className="w-4 h-4 text-slate-400" />
                             FİLTRELE
                         </Button>
                     </div>
                 </div>
+
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-border/50 to-transparent" />
 
                 {/* Content Section */}
                 {signatures.length === 0 ? (

@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/Dashboard/DashboardSidebar";
 import { DashboardHeader } from "@/components/Dashboard/DashboardHeader";
+import { SearchProvider } from "@/context/SearchContext";
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -8,14 +9,18 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     return (
-        <SidebarProvider>
-            <DashboardSidebar />
-            <SidebarInset className="flex flex-col min-h-screen bg-slate-50/50 min-w-0 overflow-hidden transition-[margin] duration-300 md:peer-data-[state=expanded]:ml-[var(--sidebar-width)] md:peer-data-[state=collapsed]:ml-[var(--sidebar-width-icon)]">
-                <DashboardHeader />
-                <div className="flex-1 overflow-y-auto w-full relative">
-                    {children}
+        <SearchProvider>
+            <SidebarProvider>
+                <div className="flex min-h-screen w-full">
+                    <DashboardSidebar />
+                    <SidebarInset className="flex flex-col flex-1 min-w-0 bg-slate-50/50 overflow-hidden transition-all duration-300">
+                        <DashboardHeader />
+                        <div className="flex-1 overflow-y-auto w-full relative">
+                            {children}
+                        </div>
+                    </SidebarInset>
                 </div>
-            </SidebarInset>
-        </SidebarProvider>
+            </SidebarProvider>
+        </SearchProvider>
     );
 };

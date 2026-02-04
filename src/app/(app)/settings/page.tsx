@@ -13,32 +13,15 @@ import { User } from '@supabase/supabase-js';
 import { Mail, User as UserIcon, Shield, LogOut, Building2, CreditCard, Bell, Sparkles, ChevronRight, CheckCircle2, Globe, PlusCircle, Globe2 } from 'lucide-react';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function SettingsPage() {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { user, loading, signOut } = useAuth();
     const [activeTab, setActiveTab] = useState('profile');
-    const router = useRouter();
-    const initialized = useRef(false);
-
-    useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
-
-        const supabase = createClient();
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-            setLoading(false);
-        };
-        getUser();
-    }, []);
 
     const handleLogout = async () => {
-        const supabase = createClient();
-        await supabase.auth.signOut();
+        await signOut();
         toast.success("Oturum kapatıldı.");
-        router.push('/login');
     };
 
     if (loading) {

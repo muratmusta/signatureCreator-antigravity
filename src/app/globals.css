@@ -84,22 +84,28 @@
 
 @layer components {
   .glass {
-    @apply bg-white/10 backdrop-blur-xl border border-white/10;
+    @apply bg-white/40 backdrop-blur-2xl border border-white/20 shadow-2xl;
   }
 
   .hover-lift {
-    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-lime/20;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .premium-card {
-    @apply bg-card border border-border shadow-sm rounded-2xl transition-all duration-300 hover:shadow-md hover:border-secondary/30;
+    @apply bg-card border border-border/40 rounded-[2rem] transition-all duration-500 hover:border-secondary/20 hover:scale-[1.01];
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
+  }
+
+  .premium-card:hover {
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
   }
 
   .btn-primary {
-    @apply h-11 px-6 rounded-full bg-secondary text-secondary-foreground font-bold text-sm transition-all hover:scale-[1.02];
+    @apply h-11 px-6 rounded-full bg-secondary text-secondary-foreground font-bold text-sm transition-all duration-300 hover:scale-[1.03] active:scale-95;
   }
 
   .btn-primary:hover {
-    box-shadow: 0 0 20px rgba(159, 232, 112, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(159, 232, 112, 0.6);
   }
 }

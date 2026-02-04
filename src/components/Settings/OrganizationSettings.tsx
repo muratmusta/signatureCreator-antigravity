@@ -53,7 +53,7 @@ export function OrganizationSettings() {
                         <div className="w-16 h-16 bg-forest/5 rounded-2xl flex items-center justify-center mb-6 border border-forest/5 group-hover:scale-110 transition-transform duration-500">
                             <Building2 className="w-8 h-8 text-forest" />
                         </div>
-                        <CardTitle className="text-3xl font-black text-gray-900 tracking-tight">Ekipler İçin SignatureOS</h1CardTitle>
+                        <CardTitle className="text-3xl font-black text-gray-900 tracking-tight">Ekipler İçin SignatureOS</CardTitle>
                         <CardDescription className="text-lg font-medium text-gray-500 leading-relaxed max-w-xl">
                             Takımınızla birlikte çalışmak, kurumsal şablonları paylaşmak ve tüm imzaları tek bir panelden yönetmek için bir organizasyon oluşturun.
                         </CardDescription>

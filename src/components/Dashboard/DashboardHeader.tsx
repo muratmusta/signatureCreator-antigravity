@@ -5,13 +5,11 @@ import { Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserMenu } from "@/components/Dashboard/UserMenu";
+import { useSearch } from "@/context/SearchContext";
 
-interface DashboardHeaderProps {
-    searchQuery?: string;
-    onSearchChange?: (query: string) => void;
-}
+export function DashboardHeader() {
+    const { searchQuery, setSearchQuery } = useSearch();
 
-export function DashboardHeader({ searchQuery = "", onSearchChange }: DashboardHeaderProps) {
     return (
         <header className="h-16 bg-primary border-b border-white/5 sticky top-0 z-40 shrink-0">
             <div className="h-full flex items-center justify-between px-6 gap-6">
@@ -28,7 +26,7 @@ export function DashboardHeader({ searchQuery = "", onSearchChange }: DashboardH
                             type="text"
                             placeholder="Tasarım ara..."
                             value={searchQuery}
-                            onChange={(e) => onSearchChange?.(e.target.value)}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-secondary/20 focus:border-secondary focus:bg-white/10 w-full h-10 pl-11 pr-4 rounded-xl transition-all outline-none text-sm font-medium"
                         />
                     </div>

@@ -19,7 +19,7 @@ import type { TemplateId } from '@/types/signature';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Search, X, ZoomIn, ZoomOut, ArrowLeft, Sparkles, Briefcase, Palette, Minimize2, Clock, Undo2, Redo2, Mail, LayoutGrid, Zap, Monitor, Smartphone, Check, Layout } from 'lucide-react';
+import { Search, X, ZoomIn, ZoomOut, ArrowLeft, Sparkles, Briefcase, Palette, Minimize2, Clock, Undo2, Redo2, Mail, LayoutGrid, Zap, Monitor, Smartphone, Check, Layout, Settings2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -60,11 +60,12 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
     } = useSignature();
     const [view, setView] = useState<'gallery' | 'editor'>('gallery');
     const [previewTemplateId, setPreviewTemplateId] = useState<TemplateId | null>(null);
-    const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
+    const [activeTab, setActiveTab] = useState<'content' | 'design' | 'templates'>('content');
     const [zoom, setZoom] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<keyof typeof TEMPLATE_CATEGORIES>('all');
     const [showEmailPreview, setShowEmailPreview] = useState(false);
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
 
     const previewPersona = previewTemplateId ? TEMPLATE_PERSONA_MAP[previewTemplateId] : null;
 
@@ -114,14 +115,14 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
     // --- GALLERY VIEW ---
     if (view === 'gallery') {
         return (
-            <div className="min-h-screen bg-background">
+            <div className="min-h-screen bg-background text-foreground">
                 {/* Premium Global Header (Wise Forest) */}
                 <nav className="h-16 flex items-center justify-between px-8 bg-[#163300] border-b border-white/10 sticky top-0 z-40 shadow-lg">
-                    <Link href="/dashboard" className="flex items-center gap-3">
+                    <Link href="/dashboard" className="flex items-center gap-3 text-white">
                         <div className="w-9 h-9 bg-[#9FE870] rounded-xl flex items-center justify-center text-[#163300] shadow-glow">
                             <Sparkles className="w-5 h-5" />
                         </div>
-                        <span className="font-extrabold text-xl tracking-tighter text-white">
+                        <span className="font-extrabold text-xl tracking-tighter">
                             Signature<span className="text-[#9FE870]">OS</span>
                         </span>
                     </Link>
@@ -151,7 +152,7 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
                                 className="w-full pl-11 h-12 bg-card border border-border rounded-2xl text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
                             />
                         </div>
-                        <div className="flex gap-2 p-1 bg-card border border-border rounded-2xl overflow-x-auto scrollbar-hide">
+                        <div className="flex gap-2 p-1 bg-card border border-border rounded-2xl overflow-x-auto scrollbar-hide text-foreground">
                             {Object.entries(TEMPLATE_CATEGORIES).map(([key, category]) => (
                                 <button
                                     key={key}
@@ -202,7 +203,7 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h2 className="text-2xl font-black text-foreground">{TEMPLATE_CATEGORIES.all.templates[previewTemplateId - 1] === previewTemplateId ? `Şablon ${previewTemplateId}` : ''}</h2>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mt-1">Wise Certified Design</p>
+                                            <p className="text-[10px] font-black text-[#163300] uppercase tracking-[0.2em] mt-1">Wise Certified Design</p>
                                         </div>
                                         <Button variant="ghost" size="icon" onClick={() => setPreviewTemplateId(null)} className="h-8 w-8 rounded-full">
                                             <X className="w-5 h-5 text-muted-foreground" />
@@ -211,11 +212,11 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
                                     <p className="text-sm text-muted-foreground font-medium leading-relaxed">Maksimum otorite ve profesyonel bir görünüm için optimize edilmiştir.</p>
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-3 text-[10px] font-black text-foreground uppercase tracking-widest">
-                                            <div className="w-6 h-6 rounded-full bg-lime/20 flex items-center justify-center"><Check className="w-3.5 h-3.5 text-primary" /></div>
+                                            <div className="w-6 h-6 rounded-full bg-[#9FE870]/20 flex items-center justify-center"><Check className="w-3.5 h-3.5 text-primary" /></div>
                                             Mobile Ready
                                         </div>
                                         <div className="flex items-center gap-3 text-[10px] font-black text-foreground uppercase tracking-widest">
-                                            <div className="w-6 h-6 rounded-full bg-lime/20 flex items-center justify-center"><Check className="w-3.5 h-3.5 text-primary" /></div>
+                                            <div className="w-6 h-6 rounded-full bg-[#9FE870]/20 flex items-center justify-center"><Check className="w-3.5 h-3.5 text-primary" /></div>
                                             Dark Mode Support
                                         </div>
                                     </div>
@@ -233,80 +234,107 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
 
     // --- EDITOR VIEW ---
     return (
-        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><LoadingSpinner size="lg" /></div>}>
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-background"><LoadingSpinner size="lg" /></div>}>
             <EditorLayout
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                sidebarContent={<FormPanel />}
+                toolbarContent={
+                    <>
+                        <button
+                            onClick={() => setActiveTab('content')}
+                            className={`sidebar-btn ${activeTab === 'content' ? 'sidebar-btn-active' : 'sidebar-btn-inactive'}`}
+                        >
+                            <LayoutGrid className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('design')}
+                            className={`sidebar-btn ${activeTab === 'design' ? 'sidebar-btn-active' : 'sidebar-btn-inactive'}`}
+                        >
+                            <Palette className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('templates')}
+                            className={`sidebar-btn ${activeTab === 'templates' ? 'sidebar-btn-active' : 'sidebar-btn-inactive'}`}
+                        >
+                            <Layout className="w-5 h-5" />
+                        </button>
+                        <div className="mt-auto space-y-4">
+                            <button className="sidebar-btn sidebar-btn-inactive"><Settings2 className="w-5 h-5" /></button>
+                        </div>
+                    </>
+                }
+                sidebarContent={
+                    <FormPanel activeTab={activeTab} />
+                }
                 headerContent={
-                    <div className="flex items-center justify-between w-full h-full px-4">
-                        <div className="flex items-center gap-4 flex-1 min-w-0 text-white">
+                    <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-6">
                             <Link href="/dashboard">
-                                <Button variant="ghost" size="icon" className="h-9 w-9 text-white/60 hover:text-[#9FE870] hover:bg-white/5 rounded-xl transition-all">
-                                    <ArrowLeft className="w-5 h-5" />
-                                </Button>
+                                <div className="w-9 h-9 bg-forest rounded-xl flex items-center justify-center text-[#9FE870] shadow-sm">
+                                    <Sparkles className="w-5 h-5" />
+                                </div>
                             </Link>
-                            <div className="h-6 w-px bg-white/10 mx-1 hidden lg:block" />
-                            <div className="flex flex-col min-w-0">
-                                <input
-                                    type="text"
-                                    value={projectTitle}
-                                    onChange={(e) => setProjectTitle(e.target.value)}
-                                    className="bg-transparent border-none focus:ring-0 font-extrabold text-base px-0 py-0 text-white placeholder:text-white/20 w-full outline-none tracking-tight truncate"
-                                    placeholder="Proje Başlığı..."
-                                />
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em]">Signature Studio</span>
-                                    <div className="w-1 h-1 rounded-full bg-white/10" />
-                                    <span className={`text-[9px] font-black uppercase tracking-[0.1em] ${isAutosaving ? 'text-[#9FE870] animate-pulse' : 'text-[#9FE870]/60'}`}>
-                                        {isAutosaving ? 'Kaydediliyor' : 'Oto-Kayıt Aktif'}
-                                    </span>
+                            <div className="flex items-center gap-3">
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-2">
+                                        {isEditingTitle ? (
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                value={projectTitle}
+                                                onChange={(e) => setProjectTitle(e.target.value)}
+                                                onBlur={() => setIsEditingTitle(false)}
+                                                onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+                                                className="bg-slate-100 border-none rounded px-2 py-0.5 font-bold text-sm outline-none w-48 text-[#163300]"
+                                            />
+                                        ) : (
+                                            <h2 className="font-extrabold text-sm text-[#163300] tracking-tight hover:bg-slate-50 cursor-pointer rounded px-2 -ml-2 py-0.5 transition-colors" onClick={() => setIsEditingTitle(true)}>
+                                                {projectTitle || 'İsimsiz İmza'}
+                                            </h2>
+                                        )}
+                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{isAutosaving ? 'Kaydediliyor...' : 'Kaydedildi'}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-1 p-1 bg-white/5 rounded-xl hidden xl:flex">
-                                <Button variant="ghost" size="icon-sm" className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10 rounded-lg" onClick={undo} disabled={!canUndo}><Undo2 className="w-4 h-4" /></Button>
-                                <Button variant="ghost" size="icon-sm" className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10 rounded-lg" onClick={redo} disabled={!canRedo}><Redo2 className="w-4 h-4" /></Button>
+                            <div className="flex items-center bg-slate-100 rounded-full p-1 mr-2">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-400 hover:text-[#163300]" onClick={undo} disabled={!canUndo}><Undo2 className="w-4 h-4" /></Button>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-400 hover:text-[#163300]" onClick={redo} disabled={!canRedo}><Redo2 className="w-4 h-4" /></Button>
                             </div>
+                            <Button variant="ghost" className="text-xs font-bold text-slate-500 hover:bg-slate-50 rounded-full px-5 h-10" onClick={() => setShowEmailPreview(true)}>
+                                <Monitor className="w-4 h-4 mr-2" />
+                                Önizleme
+                            </Button>
                             <SaveButton onSave={() => { }} />
-                            <MySignaturesButton />
-                            <div className="h-6 w-px bg-white/10 mx-1 hidden md:block" />
-                            <UserMenu />
+                            <ExportButton />
                         </div>
                     </div>
                 }
                 mainContent={
-                    <div className="relative w-full h-full flex flex-col bg-background">
-                        <div className="flex-1 flex items-center justify-center p-20 overflow-auto scrollbar-hide relative group">
-                            <div className="absolute inset-0 bg-dot-pattern opacity-[0.2]" />
-
+                    <div className="relative w-full h-full flex flex-col bg-slate-50/50">
+                        {/* Workbench Canvas */}
+                        <div className="flex-1 flex items-center justify-center p-12 overflow-auto scrollbar-hide">
                             <div
-                                className="transition-all duration-300 ease-out origin-center animate-in fade-in zoom-in duration-500"
+                                className="transition-all duration-300 ease-out origin-center"
                                 style={{ transform: `scale(${zoom})` }}
                             >
-                                <div className="bg-card shadow-soft rounded-[2.5rem] border border-border p-12 md:p-20 relative">
-                                    {/* Corner decoration */}
-                                    <div className="absolute top-8 left-8 w-2 h-2 rounded-full bg-primary/20" />
-                                    <div className="absolute top-8 right-8 w-2 h-2 rounded-full bg-primary/20" />
-                                    <div className="absolute bottom-8 left-8 w-2 h-2 rounded-full bg-primary/20" />
-                                    <div className="absolute bottom-8 right-8 w-2 h-2 rounded-full bg-primary/20" />
-
-                                    <PreviewPanel />
-                                </div>
+                                <PreviewPanel />
                             </div>
 
-                            {/* Floating Toolbar - Wise Premium Dark */}
-                            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-forest/90 text-white backdrop-blur-xl p-2 rounded-[1.25rem] shadow-2xl border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                                <div className="flex items-center gap-1 border-r border-white/10 pr-2">
-                                    <Button variant="ghost" size="icon-sm" className="h-9 w-9 rounded-xl hover:bg-white/10 text-white" onClick={() => setZoom(z => Math.max(0.5, z - 0.1))}><ZoomOut className="w-4 h-4" /></Button>
-                                    <span className="text-[10px] font-black w-12 text-center text-primary">{Math.round(zoom * 100)}%</span>
-                                    <Button variant="ghost" size="icon-sm" className="h-9 w-9 rounded-xl hover:bg-white/10 text-white" onClick={() => setZoom(z => Math.min(2, z + 0.1))}><ZoomIn className="w-4 h-4" /></Button>
+                            {/* Floating Toolbar */}
+                            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/80 backdrop-blur-xl p-2 rounded-2xl shadow-premium border border-white/20">
+                                <div className="flex items-center gap-1 border-r border-slate-100 pr-2">
+                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-slate-100 text-[#163300]" onClick={() => setZoom(z => Math.max(0.5, z - 0.1))}><ZoomOut className="w-4 h-4" /></Button>
+                                    <span className="text-[10px] font-black w-12 text-center text-[#163300]">{Math.round(zoom * 100)}%</span>
+                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-slate-100 text-[#163300]" onClick={() => setZoom(z => Math.min(2, z + 0.1))}><ZoomIn className="w-4 h-4" /></Button>
                                 </div>
                                 <div className="flex items-center gap-2 px-2">
+                                    <div className="flex h-9 bg-slate-100 rounded-xl p-1">
+                                        <button className="px-3 rounded-lg text-[10px] font-bold bg-white text-[#163300] shadow-sm"><Monitor className="w-3.5 h-3.5 mr-1.5 inline" /> Masaüstü</button>
+                                        <button className="px-3 rounded-lg text-[10px] font-bold text-slate-400 hover:text-[#163300] transition-colors"><Smartphone className="w-3.5 h-3.5 mr-1.5 inline" /> Mobil</button>
+                                    </div>
                                     <CopyButton />
-                                    <ExportButton />
                                 </div>
                             </div>
                         </div>

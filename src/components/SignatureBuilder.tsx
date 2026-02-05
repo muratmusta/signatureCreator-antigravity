@@ -306,38 +306,15 @@ function BuilderContent({ initialSignatureId }: SignatureBuilderProps) {
                                 <Monitor className="w-4 h-4 mr-2" />
                                 Önizleme
                             </Button>
+                            <CopyButton />
                             <SaveButton onSave={() => { }} />
                             <ExportButton />
                         </div>
                     </div>
                 }
                 mainContent={
-                    <div className="relative w-full h-full flex flex-col bg-slate-50/50">
-                        {/* Workbench Canvas */}
-                        <div className="flex-1 flex items-center justify-center p-12 overflow-auto scrollbar-hide">
-                            <div
-                                className="transition-all duration-300 ease-out origin-center"
-                                style={{ transform: `scale(${zoom})` }}
-                            >
-                                <PreviewPanel />
-                            </div>
-
-                            {/* Floating Toolbar */}
-                            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/80 backdrop-blur-xl p-2 rounded-2xl shadow-premium border border-white/20">
-                                <div className="flex items-center gap-1 border-r border-slate-100 pr-2">
-                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-slate-100 text-[#163300]" onClick={() => setZoom(z => Math.max(0.5, z - 0.1))}><ZoomOut className="w-4 h-4" /></Button>
-                                    <span className="text-[10px] font-black w-12 text-center text-[#163300]">{Math.round(zoom * 100)}%</span>
-                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-slate-100 text-[#163300]" onClick={() => setZoom(z => Math.min(2, z + 0.1))}><ZoomIn className="w-4 h-4" /></Button>
-                                </div>
-                                <div className="flex items-center gap-2 px-2">
-                                    <div className="flex h-9 bg-slate-100 rounded-xl p-1">
-                                        <button className="px-3 rounded-lg text-[10px] font-bold bg-white text-[#163300] shadow-sm"><Monitor className="w-3.5 h-3.5 mr-1.5 inline" /> Masaüstü</button>
-                                        <button className="px-3 rounded-lg text-[10px] font-bold text-slate-400 hover:text-[#163300] transition-colors"><Smartphone className="w-3.5 h-3.5 mr-1.5 inline" /> Mobil</button>
-                                    </div>
-                                    <CopyButton />
-                                </div>
-                            </div>
-                        </div>
+                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8">
+                        <PreviewPanel />
                     </div>
                 }
             />

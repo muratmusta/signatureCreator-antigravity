@@ -166,3 +166,14 @@ animate-pulse
 When generating code, strictly adhere to these color codes and radius values. Do not revert to default Tailwind colors (like blue-500). Use `#163300` for primary darks and `#9FE870` for primary accents. Ensure the "Manifesto" philosophy (Part 1) is respected by adding depth, motion, and intentionality to every component.
 
 ```
+
+---
+
+## PART 6: RENK ÖNİZLEME (COLOR PREVIEW)
+
+*   **Forest (Primary):** `#163300` <span style="background-color: #163300; color: #163300; border: 1px solid #000; padding: 0 10px;">████</span>
+*   **Lime (Accent):** `#9FE870` <span style="background-color: #9FE870; color: #9FE870; border: 1px solid #000; padding: 0 10px;">████</span>
+*   **Pale (Canvas):** `#F2F5F7` <span style="background-color: #F2F5F7; color: #F2F5F7; border: 1px solid #ccc; padding: 0 10px;">████</span>
+*   **White (Surface):** `#FFFFFF` <span style="background-color: #FFFFFF; color: #FFFFFF; border: 1px solid #ccc; padding: 0 10px;">████</span>
+*   **Danger:** `#FF3B30` <span style="background-color: #FF3B30; color: #FF3B30; border: 1px solid #000; padding: 0 10px;">████</span>
+*   **Muted:** `#64748b` <span style="background-color: #64748b; color: #64748b; border: 1px solid #000; padding: 0 10px;">████</span>

@@ -90,8 +90,15 @@ export const PreviewPanel: React.FC = () => {
                         <div className="h-3 bg-slate-50 rounded-full w-[95%]" />
                     </div>
 
-                    <div className="pt-8 border-t border-slate-50">
-                        <div className="animate-fade-in" id="signature-preview">
+                    <div className="pt-8 border-t border-slate-50 overflow-hidden">
+                        <div
+                            className="animate-fade-in origin-top-left transition-transform duration-500"
+                            id="signature-preview"
+                            style={{
+                                transform: viewMode === 'mobile' ? 'scale(0.55)' : 'scale(1)',
+                                width: viewMode === 'mobile' ? '180%' : '100%' // Compensate width for scale down
+                            }}
+                        >
                             <TemplateComponent data={data} logoSrc={logoSrc} />
                         </div>
                     </div>

@@ -29,14 +29,14 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
                 </aside>
 
                 {/* Middle Panel: Form Fields */}
-                <aside className="w-[400px] shrink-0 border-r border-border/50 bg-white flex flex-col z-30 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.02)]">
+                <aside className="w-[450px] shrink-0 border-r border-border/50 bg-white flex flex-col z-30 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.02)]">
                     <div className="flex-1 overflow-y-auto scrollbar-hide">
                         {sidebarContent}
                     </div>
                 </aside>
 
                 {/* Right Panel: Live Preview (Workbench Canvas) */}
-                <main className="flex-1 relative overflow-hidden bg-slate-50/50">
+                <main className="flex-1 relative overflow-hidden bg-slate-100/50 flex flex-col items-center justify-center">
                     {mainContent}
                 </main>
             </div>

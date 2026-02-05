@@ -15,25 +15,34 @@ export const CopyButton: React.FC = () => {
         try {
             const htmlContent = await renderSignatureToHtml(selectedTemplate, data);
 
-            const type = "text/html";
-            const blob = new Blob([htmlContent], { type });
-            const dataItems = [new ClipboardItem({ [type]: blob })];
+            // Create blobs for both HTML and Plain Text
+            const htmlBlob = new Blob([htmlContent], { type: "text/html" });
+            const textBlob = new Blob([htmlContent], { type: "text/plain" });
+
+            // Create ClipboardItem with both formats
+            const dataItems = [
+                new ClipboardItem({
+                    "text/html": htmlBlob,
+                    "text/plain": textBlob,
+                }),
+            ];
 
             await navigator.clipboard.write(dataItems);
 
             setCopied(true);
-            toast.success("Kopyalandı!", {
-                description: "Artık Gmail veya Outlook'a yapıştırabilirsiniz.",
+            toast.success("İmza Kopyalandı!", {
+                description: "Gmail veya Outlook'a yapıştırabilirsiniz (Formatlar korunur).",
             });
 
             setTimeout(() => setCopied(false), 3000);
         } catch (err) {
-            console.error('HTML kopyalama hatası:', err);
+            console.error('Kopyalama hatası:', err);
+            // Fallback for browsers that might fail with the above
             try {
                 const htmlContent = await renderSignatureToHtml(selectedTemplate, data);
                 await navigator.clipboard.writeText(htmlContent);
                 toast.success("HTML Kodu Kopyalandı", {
-                    description: "Metin formatında kopyalandı.",
+                    description: "Sadece metin/kod olarak kopyalandı (Zengin içerik desteği yok).",
                 });
             } catch (fallbackErr) {
                 toast.error("Kopyalama başarısız");

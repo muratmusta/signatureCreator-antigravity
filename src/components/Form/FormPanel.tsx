@@ -122,7 +122,7 @@ export const FormPanel: React.FC<FormPanelProps> = ({ activeTab }) => {
             </div>
 
             <div className="flex-1 overflow-y-auto">
-                <Accordion type="multiple" defaultValue={['personal', 'contact', 'social']} className="w-full">
+                <Accordion type="single" collapsible defaultValue="personal" className="w-full">
                     {/* Kişisel Bilgiler */}
                     <AccordionItem value="personal" className="border-b border-border/50 px-6">
                         <AccordionTrigger className="hover:no-underline py-6">
@@ -177,10 +177,10 @@ export const FormPanel: React.FC<FormPanelProps> = ({ activeTab }) => {
 
 const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
     <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-[#9FE870]/15 flex items-center justify-center text-[#163300] shadow-sm transition-colors group-hover:bg-[#9FE870]/25">
+        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shadow-sm transition-colors group-hover:bg-[#9FE870]/20 group-hover:text-[#163300]">
             {icon}
         </div>
-        <span className="text-sm font-extrabold text-[#163300] uppercase tracking-wider">{title}</span>
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest group-hover:text-[#163300] transition-colors">{title}</span>
     </div>
 );
 
